@@ -61,6 +61,7 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
 
         $queryBuilderClone = clone $queryBuilder;
         $queryBuilderClone->resetDQLPart('where');
+        $queryBuilderClone->resetDQLPart('having');
 
         if (!$classMetadata->isIdentifierComposite) {
             $replacementAlias = $queryNameGenerator->generateJoinAlias($originAlias);
@@ -78,7 +79,9 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
         }
 
         $queryBuilder->resetDQLPart('where');
+        $queryBuilder->resetDQLPart('having');
         $queryBuilder->add('where', $queryBuilderClone->getDQLPart('where'));
+        $queryBuilder->add('having', $queryBuilderClone->getDQLPart('having'));
     }
 
     /**
@@ -97,6 +100,7 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
 
         $joinParts = $queryBuilder->getDQLPart('join');
         $wherePart = $queryBuilder->getDQLPart('where');
+        $havingPart = $queryBuilder->getDQLPart('having');
 
         //reset parts
         $queryBuilderClone->resetDQLPart('join');
@@ -124,6 +128,7 @@ final class FilterEagerLoadingExtension implements QueryCollectionExtensionInter
         }
 
         $queryBuilderClone->add('where', str_replace($aliases, $replacements, (string) $wherePart));
+        $queryBuilderClone->add('having', str_replace($aliases, $replacements, (string) $havingPart));
 
         return $queryBuilderClone;
     }
